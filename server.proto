@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/sevings/karma/gen/server";
+
+package server;
+
+service Server {
+  rpc AddStorage(AddRequest) returns (AddReply) {}
+}
+
+message AddRequest {
+  string address = 1;
+  uint64 capacity = 2;
+}
+
+message AddReply {
+}
