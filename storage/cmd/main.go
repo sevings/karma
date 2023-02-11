@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/spf13/afero"
 	"google.golang.org/grpc"
 	pb "karma/gen/storage"
 	"karma/storage/service"
@@ -21,7 +22,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterStorageServer(s, &service.Service{})
+	pb.RegisterStorageServer(s, service.NewService(afero.NewMemMapFs()))
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
