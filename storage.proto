@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "github.com/sevings/karma/gen/storage";
+
+package storage;
+
+service Storage {
+  rpc SaveSlice(SaveRequest) returns (SaveReply) {}
+  rpc LoadSlice(LoadRequest) returns (LoadReply) {}
+}
+
+message SaveRequest {
+  string path = 1;
+  bytes content = 2;
+}
+
+message SaveReply {
+  bool success = 1;
+  string message = 2;
+}
+
+message LoadRequest {
+  string path = 1;
+}
+
+message LoadReply {
+  bool success = 1;
+  string message = 2;
+  bytes content = 3;
+}
