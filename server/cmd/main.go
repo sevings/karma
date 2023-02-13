@@ -21,8 +21,14 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterServerServer(s, service.NewService())
+
+	paths := service.NewStore()
+	storages := service.NewMegaStorage(paths)
+	server := service.NewService(storages)
+	pb.RegisterServerServer(s, server)
+
 	log.Printf("server listening at %v", lis.Addr())
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

@@ -5,30 +5,41 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	pb "karma/gen/server"
+	pbStorage "karma/gen/storage"
 )
+
+type Storages interface {
+	AddStorage(st *storageClient)
+	SaveFile(ctx context.Context, path string, content []byte) error
+	LoadFile(ctx context.Context, path string) ([]byte, error)
+}
 
 type Service struct {
 	pb.UnimplementedServerServer
-	conns   []grpc.ClientConnInterface
-	clients map[string]pb.ServerClient
+	storages Storages
 }
 
-func NewService() *Service {
+func NewService(storages Storages) *Service {
 	return &Service{
-		conns:   make([]grpc.ClientConnInterface, 0, 5),
-		clients: make(map[string]pb.ServerClient),
+		storages: storages,
 	}
 }
 
-func (s *Service) AddStorage(ctx context.Context, req *pb.AddRequest) (*pb.AddReply, error) {
+func (s *Service) AddStorage(_ context.Context, req *pb.AddRequest) (*pb.AddReply, error) {
 	conn, err := grpc.Dial(req.GetAddress(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return &pb.AddReply{}, err
 	}
-	c := pb.NewServerClient(conn)
+	c := pbStorage.NewStorageClient(conn)
 
-	s.conns = append(s.conns, conn)
-	s.clients[req.GetAddress()] = c
+	st := &storageClient{
+		id:     req.GetAddress(),
+		conn:   conn,
+		client: c,
+		cap:    req.GetCapacity(),
+	}
+
+	s.storages.AddStorage(st)
 
 	return &pb.AddReply{}, nil
 }
