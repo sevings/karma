@@ -1,0 +1,38 @@
+swagger: '2.0'
+info:
+  title: Karma
+  version: "1.0"
+basePath: /api/v1
+host: "127.0.0.1:8000"
+paths:
+  /file:
+    parameters:
+      - in: query
+        name: path
+        type: string
+        required: true
+    get:
+      summary: Download a file
+      responses:
+        200:
+          description: The requested file
+          schema:
+            type: file
+        404:
+          description: File not found
+        500:
+          description: Internal error
+    put:
+      summary: Upload a file
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          required: true
+      responses:
+        200:
+          description: The file uploaded
+        500:
+          description: Internal error

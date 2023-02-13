@@ -15,3 +15,11 @@
 # vendor/
 
 gen/
+
+# swagger
+/server/restapi/operations/
+/server/restapi/doc.go
+/server/restapi/embedded_spec.go
+/server/restapi/server.go
+/server/cmd/
+/client/client/
