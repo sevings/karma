@@ -13,6 +13,8 @@ paths:
         required: true
     get:
       summary: Download a file
+      produces:
+        - application/octet-stream
       responses:
         200:
           description: The requested file
@@ -26,6 +28,8 @@ paths:
       summary: Upload a file
       consumes:
         - multipart/form-data
+      produces:
+        - application/json
       parameters:
         - in: formData
           name: file
