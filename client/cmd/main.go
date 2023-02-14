@@ -11,7 +11,7 @@ import (
 func main() {
 	karma := client.Default
 
-	content := make([]byte, 0, 4096)
+	content := make([]byte, 4096)
 	for i := range content {
 		content[i] = byte(i % 255)
 	}
@@ -67,7 +67,7 @@ func put(karma *client.Karma, content []byte) error {
 
 	_, err := karma.Operations.PutFile(params)
 	if err != nil {
-		log.Println("put: ", err)
+		log.Println("put:", err)
 		return err
 	}
 
@@ -85,7 +85,7 @@ func get(karma *client.Karma) ([]byte, error) {
 
 	_, err := karma.Operations.GetFile(params, content)
 	if err != nil {
-		log.Println("get: ", err)
+		log.Println("get:", err)
 		return nil, err
 	}
 
