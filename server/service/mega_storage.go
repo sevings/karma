@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 )
 
 type PathStore interface {
@@ -30,6 +31,8 @@ func (ms *MegaStorage) AddStorage(st *storageClient) {
 }
 
 func (ms *MegaStorage) SaveFile(ctx context.Context, path string, content []byte) error {
+	log.Printf("Save %d %s", len(content), path)
+
 	storages := make([]*storageClient, 0, 5)
 	lens := make([]int, 0, 5)
 
@@ -74,6 +77,8 @@ func (ms *MegaStorage) SaveFile(ctx context.Context, path string, content []byte
 }
 
 func (ms *MegaStorage) LoadFile(ctx context.Context, path string) ([]byte, error) {
+	log.Printf("Load %s", path)
+
 	size, ids := ms.paths.GetPath(path)
 	if len(ids) == 0 {
 		return nil, fmt.Errorf("path not found")

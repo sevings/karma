@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/spf13/afero"
 	pb "karma/gen/storage"
+	"log"
 	"os"
 )
 
@@ -19,6 +20,8 @@ func NewService(fs afero.Fs) *Service {
 }
 
 func (s *Service) SaveSlice(ctx context.Context, req *pb.SaveRequest) (*pb.SaveReply, error) {
+	log.Printf("Save %d %s", len(req.GetContent()), req.GetPath())
+
 	err := afero.WriteFile(s.fs, req.GetPath(), req.GetContent(), os.FileMode(0666))
 	if err != nil {
 		return &pb.SaveReply{Success: false, Message: err.Error()}, nil
@@ -28,6 +31,8 @@ func (s *Service) SaveSlice(ctx context.Context, req *pb.SaveRequest) (*pb.SaveR
 }
 
 func (s *Service) LoadSlice(ctx context.Context, req *pb.LoadRequest) (*pb.LoadReply, error) {
+	log.Printf("Load %s", req.GetPath())
+
 	content, err := afero.ReadFile(s.fs, req.GetPath())
 	if err != nil {
 		return &pb.LoadReply{Success: false, Message: err.Error()}, nil

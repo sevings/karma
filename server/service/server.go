@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	pb "karma/gen/server"
 	pbStorage "karma/gen/storage"
+	"log"
 )
 
 type Storages interface {
@@ -26,6 +27,8 @@ func NewService(storages Storages) *Service {
 }
 
 func (s *Service) AddStorage(_ context.Context, req *pb.AddRequest) (*pb.AddReply, error) {
+	log.Printf("Add storage %d %s", req.GetCapacity(), req.GetAddress())
+
 	conn, err := grpc.Dial(req.GetAddress(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return &pb.AddReply{}, err
